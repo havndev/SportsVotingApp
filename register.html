@@ -134,7 +134,6 @@ const testBtn = document.getElementById("butaoTeste");
 
 
 
-
 function registerUser(emailInput, passwordInput, nameInput, acessInput) {
   if (acessInput === "patapouf") {
     
@@ -142,18 +141,6 @@ function registerUser(emailInput, passwordInput, nameInput, acessInput) {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(`User ${user.uid} registered successfully!`);
-
-
-        // Sign in the user immediately after registration
-        signInWithEmailAndPassword(auth, emailInput, passwordInput)
-          .then(() => {
-            // User is logged in, navigate to a new page
-            window.location.href = "index.html";
-          })
-          .catch((error) => {
-            console.error("Error signing in user:", error);
-            
-          });
 
         // Add user data to Firestore
         const usersCollection = collection(db, "users");
@@ -167,9 +154,21 @@ function registerUser(emailInput, passwordInput, nameInput, acessInput) {
         })
         .then(() => {
           console.log("User data saved to Firestore successfully!");
+
+          // Sign in the user after registration
+          signInWithEmailAndPassword(auth, emailInput, passwordInput)
+            .then(() => {
+              // User is logged in, navigate to a new page
+              window.location.href = "menu.html";
+            })
+            .catch((error) => {
+              console.error("Error signing in user:", error);
+              // Handle sign-in errors gracefully
+            });
         })
         .catch((error) => {
           console.error("Error saving user data:", error);
+          // Handle Firestore document creation errors
         });
       })
       .catch((error) => {
@@ -184,6 +183,9 @@ function registerUser(emailInput, passwordInput, nameInput, acessInput) {
 }
 
 
+
+
+
 // Register user when button is clicked
 registerButton.addEventListener("click", () => {
 
@@ -196,6 +198,7 @@ const acessInput = document.getElementById("acesscodeForm");
 
   registerUser(emailInput.value, passwordInput.value,nameInput.value,acessInput.value);
 
+  
 
 });
 

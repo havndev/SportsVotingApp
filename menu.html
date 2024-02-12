@@ -32,6 +32,220 @@
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    
+
+    const firebaseConfig = {
+apiKey: "AIzaSyDtIrZTayiDnfN1AvpMFepnMwct4wRud74",
+authDomain: "base-de-dados-auth.firebaseapp.com",
+projectId: "base-de-dados-auth",
+storageBucket: "base-de-dados-auth.appspot.com",
+messagingSenderId: "127602370613",
+appId: "1:127602370613:web:26c81e63b2861f7da6a97c",
+measurementId: "G-N0DQS7Y9R3"
+};
+
+    // Initialize Firebase app
+    const app = initializeApp(firebaseConfig);
+
+    // Get Firestore instance
+    const db = getFirestore(app);
+
+
+    const userInfoElement = document.getElementById('userInfo');
+    const logoutBtn = document.getElementById('logoutButton');
+    const loginBtn = document.getElementById('loginButton');
+
+    
+
+    logoutBtn.addEventListener("click", () => {
+
+    handleLogout();
+
+    alert("logout bem sucedido!");
+
+  });
+
+  loginBtn.addEventListener("click", () => {
+
+    window.location.href = 'login.html';
+
+
+  });
+
+    // Function to display user info and handle logout
+    function displayUserInfo(user) {
+      const userInfoElement = document.getElementById('userInfo');
+
+      if (user) {
+        // If user is logged in, display their email
+        userInfoElement.textContent = `Logged in as: ${user.email}`;
+
+        // Show the logout button
+        document.getElementById('logoutButton').style.display = 'block';
+        document.getElementById('loginButton').style.display = 'none';
+      } else {
+        // If user is not logged in, display a message
+        userInfoElement.textContent = 'User is not logged in.';
+
+        // Hide the logout button
+        document.getElementById('logoutButton').style.display = 'none';
+        document.getElementById('loginButton').style.display = 'block';
+      }
+    }
+
+    // Function to handle logout
+    function handleLogout() {
+      signOut(auth)
+        .then(() => {
+          console.log('User signed out successfully.');
+          // Redirect to index.html after logout
+          window.location.href = 'index.html';
+        })
+        .catch((error) => {
+          console.error('Error signing out:', error.message);
+        });
+    }
+
+    // Listen for authentication state changes
+    const auth = getAuth(app);
+
+// Function to check admin status
+function checkAdminStatus(user) {
+  
+  const userId = user.uid;
+  const userRef = doc(db, 'users', userId);
+  getDoc(userRef).then((docSnapshot) => {
+    if (docSnapshot.exists()) {
+      const userData = docSnapshot.data();
+      const isAdmin = userData.Admin;
+      if (isAdmin) {
+        
+        // Show the "Create Game" button and form
+        
+        document.getElementById('createGameButton').style.display = 'block';
+        document.getElementById('createDiv').style.display = 'block';
+      } else {
+        // Hide the "Create Game" button
+        document.getElementById('createGameButton').style.display = 'none';
+      }
+    } else {
+      console.log("User document does not exist");
+    }
+  }).catch((error) => {
+    console.error("Error getting user data:", error);
+  });
+}
+
+
+
+
+// Listen for authentication state changes
+onAuthStateChanged(auth, (user) => {
+  displayUserInfo(user); // Display user info first
+  checkAdminStatus(user); // Then check admin status
+});
+
+
+// Event listener for the "Create Game" button
+document.getElementById('createGameButton').addEventListener('click', () => {
+  // Handle the creation of a new game document in Firestore
+  // You can implement this based on your application's logic
+});
+
+// Reference to the games collection
+const gamesRef = collection(db, 'games');
+
+// Function to create a game item with dropdown and button
+function createGameItem(team1, team2, gameId) {
+  const gameContainer = document.createElement("div");
+  gameContainer.classList.add("game-container");
+
+  // Display game information
+  const gameInfo = document.createElement("p");
+  gameInfo.textContent = `${team1} vs ${team2}`;
+  gameContainer.appendChild(gameInfo);
+
+  // Create a container for the dropdown and button
+  const controlsContainer = document.createElement("div");
+  controlsContainer.classList.add("controls-container");
+
+  // Dropdown selector
+  const dropdown = document.createElement("select");
+  dropdown.innerHTML = `
+    <option value="${team1}">${team1}</option>
+    <option value="${team2}">${team2}</option>
+  `;
+  controlsContainer.appendChild(dropdown);
+
+  // Lock winner button
+  const button = document.createElement("button");
+  button.textContent = "Lock Winner";
+  button.onclick = () => lockWinner(gameId, dropdown.value);
+  controlsContainer.appendChild(button);
+
+  gameContainer.appendChild(controlsContainer);
+
+  return gameContainer;
+}
+
+// Reference to the games list elements
+const uclGamesList = document.getElementById("uclGamesList");
+const uelGamesList = document.getElementById("uelGamesList");
+
+// Fetch and display games data
+getDocs(gamesRef)
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const gameData = doc.data();
+      const { team1, team2, competition, active } = gameData;
+      const gameId = doc.id; // Get the document ID as the game ID
+      if (active) {
+        const gameItem = createGameItem(team1, team2, gameId);
+        if (competition === 1) {
+          uclGamesList.appendChild(gameItem);
+        } else if (competition === 2) {
+          uelGamesList.appendChild(gameItem);
+        }
+      }
+    });
+  })
+  .catch((error) => {
+    console.error("Error fetching games:", error);
+  });
+
+  const createGameForm = document.getElementById("createGameForm");
+
+createGameForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const team1 = document.getElementById("team1").value;
+  const team2 = document.getElementById("team2").value;
+  const competition = document.getElementById("competition").value;
+
+  try {
+    const docRef = await addDoc(collection(db, "games"), {
+      team1: team1,
+      team2: team2,
+      competition: parseInt(competition),
+      active: true, // Assuming the game is active by default
+      winner: "" // Assuming no winner is set initially
+    });
+
+    console.log("Game created with ID: ", docRef.id);
+    // Optionally, redirect to another page after game creation
+    // window.location.href = "nextpage.html";
+  } catch (error) {
+    console.error("Error adding game: ", error);
+  }
+});
+
+
+
+  </script>
 </head>
 
 <body>
@@ -70,6 +284,7 @@
                 <div id="userInfo" style="color: white;"></div>
                 <button id="logoutButton" class="registerbtn">Logout</button>
                 <button id="loginButton" class="registerbtn">Login</button>
+               
               </li>
              
             </ul>
@@ -78,102 +293,48 @@
       </div>
     </header>
     <!-- end header section -->
- 
-    <!-- end slider section -->
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7mW7G9ifMQFLfaeJPMvUK1?utm_source=generator&theme=0" width="50%" height="80" frameBorder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+    <div class="uclDiv">
+      <h1>Champions League</h1>
+      <div id="uclGamesList"></div> 
+    </div>
+    
+    <div class="uelDiv">
+      <h1>Europa League</h1>
+      <div id="uelGamesList"></div> 
+    </div>
+<div id="createDiv" class="createDiv" style="display: none;">
+  <form id="createGameForm">
+    <label for="team1">Team 1:</label>
+    <input type="text" id="team1" name="team1" required><br><br>
+  
+    <label for="team2">Team 2:</label>
+    <input type="text" id="team2" name="team2" required><br><br>
+  
+    <label for="competition">Competition:</label>
+    <select id="competition" name="competition">
+      <option value="1">Champions League</option>
+      <option value="2">Europa League</option>
+    </select><br><br>
+
+    <button id="createGameButton" style="display: none;">Create Game</button>
+    
+  </form>
+  
+
+  
+</div>
+    
+    
+    
+
+  
+   
+    <!--Spotify Player-->
+    <!-- <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7mW7G9ifMQFLfaeJPMvUK1?utm_source=generator&theme=0" width="50%" height="80" frameBorder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+   -->
   </div>
 
-  <!-- Scripts -->
-  <script type="module">
-
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore,collection,  doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  
-  
-  const firebaseConfig = {
-  apiKey: "AIzaSyDtIrZTayiDnfN1AvpMFepnMwct4wRud74",
-  authDomain: "base-de-dados-auth.firebaseapp.com",
-  projectId: "base-de-dados-auth",
-  storageBucket: "base-de-dados-auth.appspot.com",
-  messagingSenderId: "127602370613",
-  appId: "1:127602370613:web:26c81e63b2861f7da6a97c",
-  measurementId: "G-N0DQS7Y9R3"
-  };
-  
-  
-  // Initialize Firebase app
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  const userInfoElement = document.getElementById('userInfo');
-    const logoutBtn = document.getElementById('logoutButton');
-    const loginBtn = document.getElementById('loginButton');
-
-    
-
-logoutBtn.addEventListener("click", () => {
-
-    handleLogout();
-
-    alert("logout bem sucedido!");
-
-});
-
-loginBtn.addEventListener("click", () => {
-
-    window.location.href = 'login.html';
-
-
-});
-        
-    
-
-  function displayUserInfo(user) {
-      const userInfoElement = document.getElementById('userInfo');
-
-      if (user) {
-        // If user is logged in, display their email
-        userInfoElement.textContent = `Logged in as: ${user.email}`;
-
-        // Show the logout button
-        document.getElementById('logoutButton').style.display = 'block';
-        document.getElementById('loginButton').style.display = 'none';
-      } else {
-        // If user is not logged in, display a message
-        userInfoElement.textContent = 'User is not logged in.';
-
-        // Hide the logout button
-        document.getElementById('logoutButton').style.display = 'none';
-        document.getElementById('loginButton').style.display = 'block';
-      }
-    }
-
-
-
-  // Function to handle logout
-function handleLogout() {
-
-
-  signOut(auth)
-    .then(() => {
-      console.log('User signed out successfully.');
-      // Redirect to index.html after logout
-      window.location.href = 'index.html';
-    })
-    .catch((error) => {
-      console.error('Error signing out:', error.message);
-    });
-}
-
-
-    // Listen for authentication state changes
-    onAuthStateChanged(auth, displayUserInfo);
-  
-  
-  
-    </script>
 
   
   <!-- jQery -->

@@ -1006,3 +1006,78 @@ a {
   width: 50%; 
   border-radius: 20px;
 }
+
+.uclDiv {
+  background-color:darkblue; 
+  color: white; 
+  border-radius: 15px; 
+  padding: 20px; 
+  margin: 20px; 
+}
+
+.uelDiv {
+  background-color: coral; 
+  color: white; 
+  border-radius: 15px; 
+  padding: 20px; 
+  margin: 20px; 
+}
+
+.uclDiv h1, .uelDiv h1 {
+  margin-top: 10px;
+  margin-bottom: 50px; 
+}
+
+.uclDiv ul, .uelDiv ul {
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
+}
+
+.uclDiv ul li, .uelDiv ul li {
+  margin-bottom: 50px; /* Add spacing between each list item */
+  font-size: 18px;
+  
+}
+
+
+/* Style for game container */
+.game-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px; /* Adjust spacing between games */
+}
+
+/* Style for controls container */
+.controls-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px; /* Adjust spacing between dropdown and button */
+}
+
+/* Additional styling for dropdown and button if needed */
+.controls-container select{
+
+}
+.controls-container button {
+  
+  /* Add your styles here */
+}
+
+.controls-container button:hover {
+  border-radius: 10px;
+  /* Add your styles here */
+}
+
+.createDiv{
+  color: white;
+  background-color: #5c2cad;
+  margin: 20px;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+
+
