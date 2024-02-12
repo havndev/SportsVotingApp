@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="images\header.png" type="">
+
+  <title> PATAPOUF BETS </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- font awesome style -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <div class="bg_img_box">
+        <img src="images/hero-bg.png" alt="">
+      </div>
+    </div>
+
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+            <span>
+              PATAPOUF
+              <br> BETS
+            </span>
+          </a>
+
+          <!-- end header section -->
+      </div> 
+
+    </header>
+      <!--Form de Registo-->
+      <div class="container"> <!-- Um contêiner flexível para a foto e o formulário -->
+        <div class="photo"> <!-- Um div para a foto -->
+          <img src="images\Login.png"> 
+        </div>
+        <div class="form"> <!-- Um div para o formulário -->
+          <form action="" class="Registo">
+            <div class="container">
+              <h1>Login</h1>
+              <p>Preencha o formulário para dares login na tua conta.</p>
+              <hr>
+              
+              <label for="emailForm"><b>Email</b></label>
+              <input type="text" placeholder="Enter Email" name="email" id="emailForm" required>
+          
+              <label for="pswForm"><b>Password</b></label>
+              <input type="password" placeholder="Enter Password" name="psw" id="pswForm" required>
+          
+              <hr>
+          
+              
+              <button id="loginBtn" type="submit" class="registerbtn">Login</button>
+            </div>
+          
+            <div class="container signin">
+              <p>Não tens conta? <a href="register.html">Registo</a>.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+
+  <script type="module">
+
+
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore,collection,  doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    
+    
+    const firebaseConfig = {
+    apiKey: "AIzaSyDtIrZTayiDnfN1AvpMFepnMwct4wRud74",
+    authDomain: "base-de-dados-auth.firebaseapp.com",
+    projectId: "base-de-dados-auth",
+    storageBucket: "base-de-dados-auth.appspot.com",
+    messagingSenderId: "127602370613",
+    appId: "1:127602370613:web:26c81e63b2861f7da6a97c",
+    measurementId: "G-N0DQS7Y9R3"
+    };
+    
+    
+    // Initialize Firebase app
+    const app = initializeApp(firebaseConfig);
+    
+    // Get Firebase Auth and Firestore instances
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const loginBtn = document.getElementById("loginBtn");
+    
+    
+    function loginUser(emailInput, passwordInput) {
+  
+      signInWithEmailAndPassword(auth, emailInput, passwordInput)
+    .then((userCredential) => {
+      // User signed in successfully
+      console.log("User signed in:", userCredential.user);
+      // Redirect to another page
+      window.location.href ="menu.html";
+    })
+    .catch((error) => {
+      // Handle errors
+      
+      alert("Credenciais Erradas!!");
+    });
+      
+    }
+    
+    // Login user when button is clicked
+    loginBtn.addEventListener("click", () => {
+    
+      event.preventDefault();
+    
+      const emailInput = document.getElementById("emailForm");
+      const passwordInput = document.getElementById("pswForm");
+   
+      loginUser(emailInput.value, passwordInput.value);
+  
+    });
+    
+        
+      </script>
+      
+  
+  <!-- jQery -->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- custom js -->
+  <script type="text/javascript" src="js/custom.js"></script>
+ 
+</body>
+
+</html> 
