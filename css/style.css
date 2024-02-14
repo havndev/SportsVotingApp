@@ -168,7 +168,7 @@ a:focus {
 }
 
 .custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
-  color: #00bbf0;
+  color: white;
 }
 
 .custom_nav-container .navbar-nav .nav-item.active .nav-link {
@@ -1016,7 +1016,7 @@ a {
 }
 
 .uelDiv {
-  background-color: coral; 
+  background-color: #fb5e25; 
   color: white; 
   border-radius: 15px; 
   padding: 20px; 
@@ -1079,5 +1079,37 @@ a {
   padding: 10px;
 }
 
+#leaderboard{
+  background: rgb(255 255 255 / 30%);
+  color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.menu-link {
+  margin-right: 40px; /* Add margin to the right */
+  background-color: orange;
+  color: white;
+  opacity: 0.9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: box-shadow,transform ;
+  transition-property: box-shadow, transform;
+  display: flex;
+  align-items: center; /* Center vertically */
+}
+
+.menu-link:hover {
+  opacity: 1;
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+#logoutButton{
+  background-color: red;
+}
 
 
