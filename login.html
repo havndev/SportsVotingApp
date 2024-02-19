@@ -91,7 +91,7 @@
       </div>
   </div>
 
-  <script type="module">
+  <script type="module" src="js/auth.js">
 
 
 
@@ -117,39 +117,8 @@
     // Get Firebase Auth and Firestore instances
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const loginBtn = document.getElementById("loginBtn");
     
-    
-    function loginUser(emailInput, passwordInput) {
   
-      signInWithEmailAndPassword(auth, emailInput, passwordInput)
-    .then((userCredential) => {
-      // User signed in successfully
-      console.log("User signed in:", userCredential.user);
-      // Redirect to another page
-      window.location.href ="menu.html";
-    })
-    .catch((error) => {
-      // Handle errors
-      
-      alert("Credenciais Erradas!!");
-    });
-      
-    }
-    
-    // Login user when button is clicked
-    loginBtn.addEventListener("click", () => {
-    
-      event.preventDefault();
-    
-      const emailInput = document.getElementById("emailForm");
-      const passwordInput = document.getElementById("pswForm");
-   
-      loginUser(emailInput.value, passwordInput.value);
-  
-    });
-    
-        
       </script>
       
   

@@ -57,8 +57,8 @@
 
           <!-- end header section -->
       </div> 
-
     </header>
+
       <!--Form de Registo-->
       <div class="container"> <!-- Um contêiner flexível para a foto e o formulário -->
         <div class="photo"> <!-- Um div para a foto -->
@@ -87,8 +87,6 @@
               <button id="butaoRegisto" type="submit" class="registerbtn">Registar</button>
             </div>
 
-          
-          
             <div class="container signin">
               <p>Já tem uma conta? <a href="login.html">Login</a>.</p>
             </div>
@@ -98,7 +96,7 @@
   </div>
 
 
-<script type="module">
+<script type="module" src="js/auth.js">
 
 
 
@@ -125,86 +123,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+</script>
 
-
-
-
-const registerButton = document.getElementById("butaoRegisto");
-const testBtn = document.getElementById("butaoTeste");
-
-
-
-function registerUser(emailInput, passwordInput, nameInput, acessInput) {
-  if (acessInput === "patapouf") {
-    
-    createUserWithEmailAndPassword(auth, emailInput, passwordInput)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(`User ${user.uid} registered successfully!`);
-
-        // Add user data to Firestore
-        const usersCollection = collection(db, "users");
-        const docRef = doc(usersCollection, user.uid);
-
-        setDoc(docRef, {
-          Nome: nameInput,
-          email: emailInput,
-          Admin: false, 
-          Pontos: 0,
-        })
-        .then(() => {
-          console.log("User data saved to Firestore successfully!");
-
-          // Sign in the user after registration
-          signInWithEmailAndPassword(auth, emailInput, passwordInput)
-            .then(() => {
-              // User is logged in, navigate to a new page
-              window.location.href = "menu.html";
-            })
-            .catch((error) => {
-              console.error("Error signing in user:", error);
-              // Handle sign-in errors gracefully
-            });
-        })
-        .catch((error) => {
-          console.error("Error saving user data:", error);
-          // Handle Firestore document creation errors
-        });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error("Error creating user:", errorMessage);
-        alert("Ocurreu um erro!" + errorMessage);
-      });
-  } else {
-    alert("Wrong Code,try again!");
-  }
-}
-
-
-
-
-
-// Register user when button is clicked
-registerButton.addEventListener("click", () => {
-
-  event.preventDefault();
-
-  const emailInput = document.getElementById("emailForm");
-const passwordInput = document.getElementById("pswForm");
-const nameInput = document.getElementById("nomeForm");
-const acessInput = document.getElementById("acesscodeForm");
-
-  registerUser(emailInput.value, passwordInput.value,nameInput.value,acessInput.value);
-
-  
-
-});
-
-    
-  </script>
-  
   <!-- jQery -->
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <!-- popper js -->
