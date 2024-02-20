@@ -90,7 +90,7 @@ function checkAdminStatus(user) {
       const isAdmin = userData.Admin;
       if (isAdmin) {
         
-        window.localStorage.clear(); //try this to clear all local storage
+       
         // Show the "Create Game" button and form
         
         document.getElementById('createGameButton').style.display = 'block';
@@ -106,8 +106,6 @@ function checkAdminStatus(user) {
     console.error("Error getting user data:", error);
   });
 }
-
-
 
 
 // Listen for authentication state changes
