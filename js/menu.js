@@ -131,6 +131,10 @@ const gamesRef = collection(db, 'games');
 function createGameItem(team1, team2, gameId) {
   const gameContainer = document.createElement("div");
   gameContainer.classList.add("game-container");
+  // Add border style
+  gameContainer.style.border = "2px solid white";
+  gameContainer.style.padding = "10px"; // Add padding for better appearance
+  gameContainer.style.borderRadius = "6px";
 
   // Display game information
   const gameInfo = document.createElement("p");
@@ -152,7 +156,7 @@ function createGameItem(team1, team2, gameId) {
         // User has placed a bet for this game, display the selected team label
         const userBetData = querySnapshot.docs[0].data();
         const selectedTeamLabel = document.createElement("span");
-        selectedTeamLabel.textContent = `Aposta: ${userBetData.selectedTeam}`;
+        selectedTeamLabel.textContent = `Your bet: ${userBetData.selectedTeam}`;
         controlsContainer.appendChild(selectedTeamLabel);
       } else {
         // User has not placed a bet for this game, display the dropdown and button
@@ -171,7 +175,7 @@ function createGameItem(team1, team2, gameId) {
           button.style.display = 'none'; // Hide the button after selection
           dropdown.style.display = 'none'; // Hide the dropdown after selection
           const selectedTeamLabel = document.createElement("span");
-          selectedTeamLabel.textContent = `Aposta: ${selectedTeam}`;
+          selectedTeamLabel.textContent = `Your bet: ${selectedTeam}`;
           controlsContainer.appendChild(selectedTeamLabel);
         };
         controlsContainer.appendChild(button);
@@ -185,6 +189,7 @@ function createGameItem(team1, team2, gameId) {
 
   return gameContainer;
 }
+
 
 
 
