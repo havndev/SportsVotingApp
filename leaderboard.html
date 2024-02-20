@@ -33,20 +33,21 @@
   <link href="css/responsive.css" rel="stylesheet" />
 
   <script type="module" src="js/leaderboard.js">
+    
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc, serverTimestamp, query, where,updateDoc,increment} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
 
     const firebaseConfig = {
-apiKey: "AIzaSyDtIrZTayiDnfN1AvpMFepnMwct4wRud74",
-authDomain: "base-de-dados-auth.firebaseapp.com",
-projectId: "base-de-dados-auth",
-storageBucket: "base-de-dados-auth.appspot.com",
-messagingSenderId: "127602370613",
-appId: "1:127602370613:web:26c81e63b2861f7da6a97c",
-measurementId: "G-N0DQS7Y9R3"
-};
+      apiKey: "AIzaSyDtIrZTayiDnfN1AvpMFepnMwct4wRud74",
+      authDomain: "base-de-dados-auth.firebaseapp.com",
+      projectId: "base-de-dados-auth",
+      storageBucket: "base-de-dados-auth.appspot.com",
+      messagingSenderId: "127602370613",
+      appId: "1:127602370613:web:26c81e63b2861f7da6a97c",
+      measurementId: "G-N0DQS7Y9R3"
+      };
 
     // Initialize Firebase app
     const app = initializeApp(firebaseConfig);

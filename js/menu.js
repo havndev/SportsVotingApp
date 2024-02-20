@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc, serverTimestamp,query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
    
         const firebaseConfig = {
@@ -126,6 +126,7 @@ document.getElementById('createGameButton').addEventListener('click', () => {
 // Reference to the games collection
 const gamesRef = collection(db, 'games');
 
+
 // Function to create a game item with dropdown and button
 function createGameItem(team1, team2, gameId) {
   const gameContainer = document.createElement("div");
@@ -136,52 +137,58 @@ function createGameItem(team1, team2, gameId) {
   gameInfo.textContent = `${team1} vs ${team2}`;
   gameContainer.appendChild(gameInfo);
 
-  // Create a container for the dropdown and button
+  // Create a container for the label
   const controlsContainer = document.createElement("div");
   controlsContainer.classList.add("controls-container");
 
-  // Dropdown selector
-  const dropdown = document.createElement("select");
-  dropdown.innerHTML = `
-    <option value="${team1}">${team1}</option>
-    <option value="${team2}">${team2}</option>
-  `;
-  controlsContainer.appendChild(dropdown);
+  // Check if the user has placed a bet for this game
+  const user = auth.currentUser; // Assuming you have access to the current user
+  if (user) {
+    const userId = user.uid;
+    const userBetRef = collection(db, 'bets');
+    const q = query(userBetRef, where('userId', '==', userId), where('gameId', '==', gameId));
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        // User has placed a bet for this game, display the selected team label
+        const userBetData = querySnapshot.docs[0].data();
+        const selectedTeamLabel = document.createElement("span");
+        selectedTeamLabel.textContent = `Aposta: ${userBetData.selectedTeam}`;
+        controlsContainer.appendChild(selectedTeamLabel);
+      } else {
+        // User has not placed a bet for this game, display the dropdown and button
+        const dropdown = document.createElement("select");
+        dropdown.innerHTML = `
+          <option value="${team1}">${team1}</option>
+          <option value="${team2}">${team2}</option>
+        `;
+        controlsContainer.appendChild(dropdown);
 
-  // Lock winner button
-const button = document.createElement("button");
-button.textContent = "Lock Winner";
-button.onclick = () => {
-  const selectedTeam = dropdown.value;
-  placeBet(gameId, selectedTeam);
-  button.style.display = 'none';
-  dropdown.disabled = true;
-
-  // Store the state in localStorage
-  localStorage.setItem(`buttonState_${gameId}`, 'hidden');
-  localStorage.setItem(`dropdownState_${gameId}`, 'disabled');
-};
-
-// Check if the button state is stored in localStorage
-const buttonState = localStorage.getItem(`buttonState_${gameId}`);
-if (buttonState === 'hidden') {
-  button.style.display = 'none';
-}
-
-// Check if the dropdown state is stored in localStorage
-const dropdownState = localStorage.getItem(`dropdownState_${gameId}`);
-if (dropdownState === 'disabled') {
-  dropdown.disabled = true;
-}
-
-controlsContainer.appendChild(button);
-
-  controlsContainer.appendChild(button);
+        const button = document.createElement("button");
+        button.textContent = "Lock Winner";
+        button.onclick = () => {
+          const selectedTeam = dropdown.value;
+          placeBet(gameId, selectedTeam);
+          button.style.display = 'none'; // Hide the button after selection
+          dropdown.style.display = 'none'; // Hide the dropdown after selection
+          const selectedTeamLabel = document.createElement("span");
+          selectedTeamLabel.textContent = `Aposta: ${selectedTeam}`;
+          controlsContainer.appendChild(selectedTeamLabel);
+        };
+        controlsContainer.appendChild(button);
+      }
+    }).catch((error) => {
+      console.error("Error getting user bet:", error);
+    });
+  }
 
   gameContainer.appendChild(controlsContainer);
 
   return gameContainer;
 }
+
+
+
+
 
 // Function to place a bet
 function placeBet(gameId, selectedTeam) {
