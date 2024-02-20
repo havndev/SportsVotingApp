@@ -156,7 +156,7 @@ function createGameItem(team1, team2, gameId) {
         // User has placed a bet for this game, display the selected team label
         const userBetData = querySnapshot.docs[0].data();
         const selectedTeamLabel = document.createElement("span");
-        selectedTeamLabel.textContent = `Your bet: ${userBetData.selectedTeam}`;
+        selectedTeamLabel.textContent = `Aposta: ${userBetData.selectedTeam}`;
         controlsContainer.appendChild(selectedTeamLabel);
       } else {
         // User has not placed a bet for this game, display the dropdown and button
@@ -175,7 +175,7 @@ function createGameItem(team1, team2, gameId) {
           button.style.display = 'none'; // Hide the button after selection
           dropdown.style.display = 'none'; // Hide the dropdown after selection
           const selectedTeamLabel = document.createElement("span");
-          selectedTeamLabel.textContent = `Your bet: ${selectedTeam}`;
+          selectedTeamLabel.textContent = `Aposta: ${selectedTeam}`;
           controlsContainer.appendChild(selectedTeamLabel);
         };
         controlsContainer.appendChild(button);
