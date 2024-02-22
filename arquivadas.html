@@ -32,7 +32,7 @@
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
 
-  <script type="module" src="js/menu.js">
+  <script type="module" src="js/arquivadas.js">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc, serverTimestamp,query, where} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -72,10 +72,10 @@
 <header class="header_section">
   <div class="container-fluid">
     <nav class="navbar navbar-expand-lg custom_nav-container ">
-      <a class="navbar-brand" href="menu.html">
+      <a class="navbar-brand" href="arquivadas.html">
         <span>
-          PATAPOUF
-          <br> BETS
+          ARQUIVO DE
+          <br> APOSTAS
         </span>
       </a>
 
@@ -92,7 +92,7 @@
             <a class="nav-link menu-link" href="leaderboard.html">Leaderboard</a> <!-- Add this button -->
           </li>
           <li class="nav-item" style="display: flex;align-items: center;">
-            <a class="nav-link menu-link" href="arquivadas.html">Arquivo</a> <!-- Add this button -->
+            <a class="nav-link menu-link" href="menu.html">Menu</a> <!-- Add this button -->
           </li>
           <li class="nav-item">
             <div id="userInfo" style="color: white;"></div>
@@ -129,7 +129,7 @@
       <option value="2">Europa League</option>
     </select><br><br>
 
-    <button id="createGameButton" style="display: none;">Create Game</button>
+
     
   </form>
   
