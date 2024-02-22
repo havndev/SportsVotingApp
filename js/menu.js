@@ -78,6 +78,7 @@ import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc, serverT
 
     // Listen for authentication state changes
     const auth = getAuth(app);
+    
 
 // Function to check admin status
 function checkAdminStatus(user) {
@@ -137,6 +138,7 @@ function createGameItem(team1, team2, gameId) {
   // Display game information
   const gameInfo = document.createElement("p");
   gameInfo.textContent = `${team1} vs ${team2}`;
+  gameInfo.style.fontWeight = "bold";
   gameContainer.appendChild(gameInfo);
 
   // Create a container for the label
@@ -243,26 +245,28 @@ getDocs(gamesRef)
   const createGameForm = document.getElementById("createGameForm");
 
 createGameForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
 
-  const team1 = document.getElementById("team1").value;
-  const team2 = document.getElementById("team2").value;
-  const competition = document.getElementById("competition").value;
+    event.preventDefault();
 
-  try {
-    const docRef = await addDoc(collection(db, "games"), {
-      team1: team1,
-      team2: team2,
-      competition: parseInt(competition),
-      active: true, // Assuming the game is active by default
-      winner: "" // Assuming no winner is set initially
-    });
-
-    console.log("Game created with ID: ", docRef.id);
-    // Optionally, redirect to another page after game creation
-    // window.location.href = "nextpage.html";
-  } catch (error) {
-    console.error("Error adding game: ", error);
-  }
+    const team1 = document.getElementById("team1").value;
+    const team2 = document.getElementById("team2").value;
+    const competition = document.getElementById("competition").value;
+  
+    try {
+      const docRef = await addDoc(collection(db, "games"), {
+        team1: team1,
+        team2: team2,
+        competition: parseInt(competition),
+        active: true, // Assuming the game is active by default
+        winner: "", // Assuming no winner is set initially
+        timestamp: serverTimestamp(),
+      });
+  
+      console.log("Game created with ID: ", docRef.id);
+      
+    } catch (error) {
+      console.error("Error adding game: ", error);
+    }
+  
 });
 

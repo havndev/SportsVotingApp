@@ -89,7 +89,6 @@ onAuthStateChanged(auth, (user) => {
 const gamesRef = collection(db, 'games');
 
 
-// Function to create a game item with dropdown and button
 function createGameItem(team1, team2, gameId) {
   const gameContainer = document.createElement("div");
   gameContainer.classList.add("game-container");
@@ -97,16 +96,16 @@ function createGameItem(team1, team2, gameId) {
   gameContainer.style.border = "2px solid white";
   gameContainer.style.padding = "10px"; // Add padding for better appearance
   gameContainer.style.borderRadius = "6px";
-  gameContainer.style.opacity = "0.5";
+  gameContainer.style.opacity = "0.8";
 
   // Display game information
   const gameInfo = document.createElement("p");
   gameInfo.textContent = `${team1} vs ${team2}`;
   gameContainer.appendChild(gameInfo);
 
-  // Create a container for the label
-  const controlsContainer = document.createElement("div");
-  controlsContainer.classList.add("controls-container");
+  // Create a container for the labels
+  const labelsContainer = document.createElement("div");
+  labelsContainer.classList.add("labels-container");
 
   // Check if the user has placed a bet for this game
   const user = auth.currentUser; // Assuming you have access to the current user
@@ -119,24 +118,47 @@ function createGameItem(team1, team2, gameId) {
         // User has placed a bet for this game, display the selected team label
         const userBetData = querySnapshot.docs[0].data();
         const selectedTeamLabel = document.createElement("span");
-        selectedTeamLabel.textContent = `Aposta: ${userBetData.selectedTeam}`;
-        controlsContainer.appendChild(selectedTeamLabel);
+        selectedTeamLabel.style.marginRight = "40px";
+        selectedTeamLabel.style.fontWeight = "bold";
+        selectedTeamLabel.textContent = `Aposta: ${userBetData.selectedTeam}      `;
+        labelsContainer.appendChild(selectedTeamLabel);
       } else {
-        const selectedTeamLabel = document.createElement("span");
-        selectedTeamLabel.textContent = `Aposta: Não Apostou!`;
-        controlsContainer.appendChild(selectedTeamLabel);
-
-       
+        const noBetLabel = document.createElement("span");
+        noBetLabel.textContent = `Aposta: Não Apostou!`;
+        labelsContainer.appendChild(noBetLabel);
       }
     }).catch((error) => {
       console.error("Error getting user bet:", error);
     });
   }
 
-  gameContainer.appendChild(controlsContainer);
+  // Fetch the winner of the game from Firestore
+  const gameRef = doc(db, 'games', gameId);
+  getDoc(gameRef).then((docSnapshot) => {
+    if (docSnapshot.exists()) {
+      const gameData = docSnapshot.data();
+      const winner = gameData.winner;
+      if (winner) {
+        const winnerLabel = document.createElement("span");
+        winnerLabel.textContent = `Vencedor: ${winner}`;
+        labelsContainer.appendChild(winnerLabel);
+      } else {
+        const noWinnerLabel = document.createElement("span");
+        noWinnerLabel.textContent = `Vencedor: Ainda não decidido`;
+        labelsContainer.appendChild(noWinnerLabel);
+      }
+    } else {
+      console.log("Game document does not exist");
+    }
+  }).catch((error) => {
+    console.error("Error getting game data:", error);
+  });
+
+  gameContainer.appendChild(labelsContainer);
 
   return gameContainer;
 }
+
 
 // Reference to the games list elements
 const uclGamesList = document.getElementById("uclGamesList");
