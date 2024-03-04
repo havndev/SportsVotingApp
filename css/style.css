@@ -86,7 +86,7 @@ a:focus {
 /*header section*/
 .hero_area {
   position: relative;
-  min-height: 100vh;
+  min-height: 110vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1084,6 +1084,7 @@ a {
   color: #fff;
   border-radius: 10px;
   padding: 20px;
+
 }
 
 .menu-link {
@@ -1111,5 +1112,7 @@ a {
 #logoutButton{
   background-color: red;
 }
+
+
 
 
