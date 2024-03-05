@@ -30,38 +30,47 @@ import { getFirestore, collection, doc, setDoc ,getDocs, getDoc, addDoc, serverT
 
     handleLogout();
 
-    alert("logout bem sucedido!");
-
   });
 
   loginBtn.addEventListener("click", () => {
 
     window.location.href = 'login.html';
 
-
   });
 
-    // Function to display user info and handle logout
-    function displayUserInfo(user) {
-      const userInfoElement = document.getElementById('userInfo');
-
-      if (user) {
-        // If user is logged in, display their email
-        userInfoElement.textContent = `Logged in as: ${user.email}`;
-
-        // Show the logout button
-        document.getElementById('logoutButton').style.display = 'block';
-        document.getElementById('loginButton').style.display = 'none';
-      } else {
-        // If user is not logged in, display a message
-        userInfoElement.textContent = 'User is not logged in.';
-
-        // Hide the logout button
-        document.getElementById('logoutButton').style.display = 'none';
-        document.getElementById('loginButton').style.display = 'block';
+  async function displayUserInfo(user) {
+    const userInfoElement = document.getElementById('userInfo');
+  
+    if (user) {
+      // If user is logged in, retrieve their name from Firestore
+      const userId = user.uid;
+      const userDocRef = doc(db, 'users', userId);
+      try {
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const userName = userData.Nome; // Assuming the name field exists in your user document
+          userInfoElement.textContent = `Olá, ${userName}`;
+        } else {
+          userInfoElement.textContent = 'User is not logged in.';
+        }
+      } catch (error) {
+        console.error('Error getting user document:', error);
+        userInfoElement.textContent = 'Error getting user data.';
       }
+  
+      // Show the logout button
+      document.getElementById('logoutButton').style.display = 'block';
+      document.getElementById('loginButton').style.display = 'none';
+    } else {
+      // If user is not logged in, display a message
+      userInfoElement.textContent = 'User is not logged in.';
+  
+      // Hide the logout button
+      document.getElementById('logoutButton').style.display = 'none';
+      document.getElementById('loginButton').style.display = 'block';
     }
-
+  }
     // Function to handle logout
     function handleLogout() {
       signOut(auth)
