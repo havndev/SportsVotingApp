@@ -172,6 +172,7 @@ function createGameItem(team1, team2, gameId) {
       } else {
         // User has not placed a bet for this game, display the dropdown and button
         const dropdown = document.createElement("select");
+        dropdown.className = "form-select";
         dropdown.innerHTML = `
           <option value="${team1}">${team1}</option>
           <option value="${team2}">${team2}</option>
@@ -179,6 +180,7 @@ function createGameItem(team1, team2, gameId) {
         controlsContainer.appendChild(dropdown);
 
         const button = document.createElement("button");
+        button.className = "btn btn-primary";
         button.textContent = "Lock Winner";
         button.onclick = () => {
           const selectedTeam = dropdown.value;
